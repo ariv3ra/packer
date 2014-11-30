@@ -81,8 +81,10 @@ func getCommandArgs(bootDrive string, state multistep.StateBag) ([]string, error
 	defaultArgs["-machine"] = fmt.Sprintf("type=%s", config.MachineType)
 	defaultArgs["-netdev"] = fmt.Sprintf("user,id=user.0,hostfwd=tcp::%v-:22", sshHostPort)
 	defaultArgs["-device"] = fmt.Sprintf("%s,netdev=user.0", config.NetDevice)
-	defaultArgs["-drive"] = fmt.Sprintf("file=%s,if=%s", imgPath, config.DiskInterface)
-	defaultArgs["-cdrom"] = isoPath
+	defaultArgs["-drive"] = fmt.Sprintf("file=%s,if=%s,cache=%s", imgPath, config.DiskInterface, config.DiskCache)
+	if !config.DiskImage {
+		defaultArgs["-cdrom"] = isoPath
+	}
 	defaultArgs["-boot"] = bootDrive
 	defaultArgs["-m"] = "512M"
 	defaultArgs["-vnc"] = vnc
